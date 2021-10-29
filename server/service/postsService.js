@@ -16,6 +16,10 @@ module.exports = {
   },
 
   savePost: async function (post) {
+    if (Object.keys(post).length === 0) throw new Error("Validation errors");
+
+    if (!post.title || !post.content) throw new Error("Validation errors");
+
     const existingPost = await postsData.getPostByTitle(post.title);
 
     if (existingPost) throw new Error("Post already exists");
@@ -24,6 +28,8 @@ module.exports = {
   },
 
   updatePost: async function (id, post) {
+    if (Object.keys(post).length === 0) throw new Error("Validation errors");
+
     await this.getPost(id);
 
     return postsData.updatePost(id, post);
