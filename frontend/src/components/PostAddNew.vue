@@ -8,11 +8,27 @@ const form = reactive({
 
 const errorMessage = ref("");
 
-const addPost = () => {
+const addPost = async () => {
   errorMessage.value = "";
 
   if (!form.title || !form.content) {
     errorMessage.value = "Preencha todos campos";
+    return;
+  }
+
+  let response = await fetch("/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(form),
+  });
+
+  if (response.status === 200) {
+    let data = await response.json();
+    console.log({ data });
+  } else {
+    errorMessage.value = await response.text();
   }
 };
 </script>
