@@ -7,7 +7,7 @@ const generate = function () {
 };
 
 const request = function (url, method, data) {
-  return axios({ url, method, data });
+  return axios({ url, method, data, validateStatus: false });
 };
 
 test("Should get posts", async function () {
@@ -21,6 +21,7 @@ test("Should get posts", async function () {
   const posts = response.data;
 
   // then
+  expect(response.status).toBe(200);
   expect(posts).toHaveLength(3);
 
   await postsService.deletePost(post1.id);
@@ -38,6 +39,7 @@ test("Should save post", async function () {
   const post = response.data;
 
   // then
+  expect(response.status).toBe(201);
   expect(post.title).toBe(data.title);
   expect(post.content).toBe(data.content);
 
@@ -51,14 +53,27 @@ test("Should update post", async function () {
   post.content = "iupdate";
 
   // when
-  await request(`http://localhost:3000/posts/${post.id}`, "put", post);
+  const response = await request(`http://localhost:3000/posts/${post.id}`, "put", post);
   const updatedPost = await postsService.getPost(post.id);
 
   // then
+  expect(response.status).toBe(204);
   expect(updatedPost.title).toBe(post.title);
   expect(updatedPost.content).toBe(post.content);
 
   await postsService.deletePost(updatedPost.id);
+});
+
+test("Should not update post", async function () {
+  // given
+  const post = { id: 1 };
+
+  // when
+  const response = await request(`http://localhost:3000/posts/${post.id}`, "put", post);
+
+  // then
+  expect(response.status).toBe(404);
+  expect(response.data).toBe(`Post with id ${post.id} not found`);
 });
 
 test("Should delete post", async function () {
@@ -66,9 +81,10 @@ test("Should delete post", async function () {
   const post = await postsService.savePost({ title: generate(), content: generate() });
 
   // when
-  await request(`http://localhost:3000/posts/${post.id}`, "delete");
-  const result = await postsService.getPost(post.id);
+  const response = await request(`http://localhost:3000/posts/${post.id}`, "delete");
+  const posts = await postsService.getPosts();
 
   // then
-  expect(result).toBeNull();
+  expect(response.status).toBe(204);
+  expect(posts).toHaveLength(0);
 });

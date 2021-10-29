@@ -17,11 +17,7 @@ module.exports = {
   },
 
   updatePost: function (id, post) {
-    return database.one("update blog.post set title=$1, content=$2 where id = $3 returning *", [
-      post.title,
-      post.content,
-      id,
-    ]);
+    return database.none("update blog.post set title=$1, content=$2 where id = $3", [post.title, post.content, id]);
   },
 
   deletePost: function (id) {

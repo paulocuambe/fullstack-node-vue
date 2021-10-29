@@ -1,8 +1,14 @@
 const postsData = require("../data/postsData.js");
 
 module.exports = {
-  getPost: function (id) {
-    return postsData.getPost(id);
+  getPost: async function (id) {
+    const post = await postsData.getPost(id);
+
+    if (!post) {
+      throw new Error(`Post with id ${id} not found`);
+    }
+
+    return post;
   },
 
   getPosts: function () {
@@ -13,7 +19,9 @@ module.exports = {
     return postsData.savePost(post);
   },
 
-  updatePost: function (id, post) {
+  updatePost: async function (id, post) {
+    await this.getPost(id);
+
     return postsData.updatePost(id, post);
   },
 
