@@ -61,7 +61,7 @@ test("Should update post", async function () {
   await postsService.deletePost(updatedPost.id);
 });
 
-test.only("Should delete post", async function () {
+test("Should delete post", async function () {
   // given
   const post = await postsService.savePost({ title: generate(), content: generate() });
 
