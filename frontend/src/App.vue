@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import { onBeforeMount } from "@vue/runtime-core";
-import PostAddNew from "./components/PostAddNew.vue";
+import PostCreate from "./components/PostCreate.vue";
 import PostList from "./components/PostList.vue";
 
 const posts = ref([]);
@@ -24,7 +24,7 @@ onBeforeMount(async () => {
 <template>
   <main class="my-10">
     <div class="w-80 mx-auto">
-      <post-add-new />
+      <post-create />
     </div>
     <div class="mt-10 container w-1/2 mx-auto">
       <p v-if="isLoading">Carregando...</p>
