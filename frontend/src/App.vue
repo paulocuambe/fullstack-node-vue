@@ -1,12 +1,19 @@
 <script setup>
-import { reactive } from "@vue/reactivity";
+import { ref } from "@vue/reactivity";
+import { onBeforeMount } from "@vue/runtime-core";
 import PostAddNew from "./components/PostAddNew.vue";
 import PostList from "./components/PostList.vue";
 
-const posts = reactive([
-  { id: 1, title: "Let's dive into Vue 2", content: "Some tricks about vue ## 2 - reactive and ref", date: new Date() },
-  { id: 2, title: "An Introduction to Nuxt 3", content: "**Vue** is awesome", date: new Date() },
-]);
+const posts = ref([]);
+
+const isLoading = ref(true);
+
+onBeforeMount(async () => {
+  let response = await fetch("/posts");
+  posts.value = await response.json();
+
+  isLoading.value = false;
+});
 </script>
 
 <template>
@@ -14,8 +21,9 @@ const posts = reactive([
     <div class="w-80 mx-auto">
       <post-add-new />
     </div>
-    <div class="mt-10 container mx-auto">
-      <post-list :posts="posts" />
+    <div class="mt-10 container w-1/2 mx-auto">
+      <p v-if="isLoading">Carregando...</p>
+      <post-list v-else :posts="posts" />
     </div>
   </main>
 </template>
