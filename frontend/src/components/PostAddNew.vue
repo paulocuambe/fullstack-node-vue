@@ -7,9 +7,11 @@ const form = reactive({
 });
 
 const errorMessage = ref("");
+const successMessage = ref("");
 
 const addPost = async () => {
   errorMessage.value = "";
+  successMessage.value = "";
 
   if (!form.title || !form.content) {
     errorMessage.value = "Preencha todos campos";
@@ -24,9 +26,10 @@ const addPost = async () => {
     body: JSON.stringify(form),
   });
 
-  if (response.status === 200) {
-    let data = await response.json();
-    console.log({ data });
+  if (response.status === 201) {
+    successMessage.value = "Projecto adicionado com sucesso.";
+    form.content = "";
+    form.title = "";
   } else {
     errorMessage.value = await response.text();
   }
@@ -39,6 +42,7 @@ const addPost = async () => {
 
     <form @submit.prevent="addPost">
       <div class="text-red-700" v-if="errorMessage">{{ errorMessage }}</div>
+      <div class="text-green-700" v-if="successMessage">{{ successMessage }}</div>
 
       <div>
         <label class="block">Title*</label>
