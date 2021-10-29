@@ -1,12 +1,16 @@
 const database = require("../infra/database.js");
 
 module.exports = {
+  getPosts: function () {
+    return database.query("select * from blog.post");
+  },
+
   getPost: function (id) {
     return database.oneOrNone("select * from blog.post where id = $1", id);
   },
 
-  getPosts: function () {
-    return database.query("select * from blog.post");
+  getPostByTitle: function (title) {
+    return database.oneOrNone("select * from blog.post where title = $1", title);
   },
 
   savePost: function (post) {

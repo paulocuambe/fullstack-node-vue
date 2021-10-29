@@ -5,7 +5,7 @@ module.exports = {
     const post = await postsData.getPost(id);
 
     if (!post) {
-      throw new Error(`Post with id ${id} not found`);
+      throw new Error("Post not found");
     }
 
     return post;
@@ -15,7 +15,11 @@ module.exports = {
     return postsData.getPosts();
   },
 
-  savePost: function (post) {
+  savePost: async function (post) {
+    const existingPost = await postsData.getPostByTitle(post.title);
+
+    if (existingPost) throw new Error("Post already exists");
+
     return postsData.savePost(post);
   },
 

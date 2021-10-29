@@ -46,6 +46,22 @@ test("Should save post", async function () {
   await postsService.deletePost(post.id);
 });
 
+test("Should not save post when the title has already been taken", async function () {
+  // given
+  const data = { title: generate(), content: generate() };
+
+  // when
+  const response = await request("http://localhost:3000/posts", "post", data);
+  const response2 = await request("http://localhost:3000/posts", "post", data);
+
+  const post = response.data;
+
+  // then
+  expect(response2.status).toBe(409);
+
+  await postsService.deletePost(post.id);
+});
+
 test("Should update post", async function () {
   // given
   const post = await postsService.savePost({ title: generate(), content: generate() });
@@ -73,7 +89,6 @@ test("Should not update post", async function () {
 
   // then
   expect(response.status).toBe(404);
-  expect(response.data).toBe(`Post with id ${post.id} not found`);
 });
 
 test("Should delete post", async function () {
