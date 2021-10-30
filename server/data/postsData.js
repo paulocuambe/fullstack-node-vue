@@ -6,7 +6,13 @@ module.exports = {
   },
 
   getPost: function (id) {
-    return database.oneOrNone("select * from blog.post where id = $1", id);
+    let query = "select * from blog.post where id = $1";
+
+    if (isNaN(id)) {
+      query = "select * from blog.post where slug = $1";
+    }
+
+    return database.oneOrNone(query, id);
   },
 
   getPostByTitle: function (title) {
@@ -26,15 +32,22 @@ module.exports = {
   },
 
   updatePost: function (id, post) {
-    return database.none("update blog.post set title=$1, slug=$2, content=$3 where id = $4", [
-      post.title,
-      post.slug,
-      post.content,
-      id,
-    ]);
+    let query = "update blog.post set title=$1, slug=$2, content=$3 where id = $4";
+
+    if (isNaN(id)) {
+      query = "update blog.post set title=$1, slug=$2, content=$3 where slug = $4";
+    }
+
+    return database.none(query, [post.title, post.slug, post.content, id]);
   },
 
   deletePost: function (id) {
-    return database.none("delete from blog.post where id = $1", id);
+    let query = "delete from blog.post where id = $1";
+
+    if (isNaN(id)) {
+      query = "delete from blog.post where slug = $1";
+    }
+
+    return database.none(query, id);
   },
 };

@@ -30,6 +30,38 @@ test("Should get posts", async function () {
   await postsService.deletePost(post3.id);
 });
 
+test("Should get post by id", async function () {
+  // given
+  const post = await postsService.savePost({ title: generate(), content: generate() });
+
+  // when
+  const response = await request(`http://localhost:3000/posts/${post.id}`, "get");
+  const result = response.data;
+
+  // then
+  expect(response.status).toBe(200);
+  expect(result).not.toBeNull();
+
+  await postsService.deletePost(post.id);
+});
+
+test("Should get post by slug", async function () {
+  // given
+  const title = generate();
+  const post = await postsService.savePost({ title, content: generate() });
+
+  // when
+  const response = await request(`http://localhost:3000/posts/${slugify(title)}`, "get");
+  const result = response.data;
+  console.log(result);
+
+  // then
+  expect(response.status).toBe(200);
+  expect(result).not.toBeNull();
+
+  await postsService.deletePost(post.id);
+});
+
 test("Should save post", async function () {
   // given
   const data = { title: generate(), content: generate() };

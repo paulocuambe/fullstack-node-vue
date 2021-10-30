@@ -11,6 +11,15 @@ router.get("/posts", async function (req, res, next) {
   }
 });
 
+router.get("/posts/:id", async function (req, res, next) {
+  try {
+    const post = await postsService.getPost(req.params.id);
+    res.json(post);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/posts", async function (req, res, next) {
   const post = req.body;
   try {
