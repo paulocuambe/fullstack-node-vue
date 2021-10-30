@@ -11,8 +11,10 @@ const props = defineProps({
 </script>
 
 <template>
-  <h2 v-if="posts.length == 0">Nenhum post ainda</h2>
-  <div v-else>
-    <post-list-item v-for="post in posts" :key="post.id" :post="post" />
+  <div>
+    <h2 v-if="posts.length == 0">Nenhum post ainda</h2>
+    <div v-else>
+      <post-list-item v-for="post in posts" :key="post.id" :post="post" />
+    </div>
   </div>
 </template>
