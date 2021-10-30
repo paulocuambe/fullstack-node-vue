@@ -8,14 +8,20 @@ defineProps({
     },
   },
 });
+
+const fromatedDate = (date) => {
+  return new Date(date).toLocaleString();
+};
 </script>
 
 <template>
-  <section class="shadow-md border rounded p-6">
-    <h2 class="uppercase font-bold">{{ post.title }}</h2>
-    <p>{{ post.content }}</p>
-    <router-link :to="{ name: 'blog-post', params: { slug: post.slug } }" class="text-blue-600 hover:underline"
-      >Ler mais</router-link
-    >
+  <section class="shadow-md border rounded p-4">
+    <h2 class="uppercase font-bold text-2xl">{{ post.title }}</h2>
+    <div class="mt-1 flex justify-between flex-wrap">
+      <span>{{ fromatedDate(post.date) }}</span>
+      <router-link :to="{ name: 'blog-post', params: { slug: post.slug } }" class="text-blue-700 hover:underline"
+        >Read more</router-link
+      >
+    </div>
   </section>
 </template>
