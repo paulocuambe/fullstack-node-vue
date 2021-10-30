@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const axios = require("axios");
+const slugify = require("slugify");
 const postsService = require("../service/postsService.js");
 
 const generate = function () {
@@ -41,6 +42,7 @@ test("Should save post", async function () {
   // then
   expect(response.status).toBe(201);
   expect(post.title).toBe(data.title);
+  expect(post.slug).toBe(slugify(data.title));
   expect(post.content).toBe(data.content);
 
   await postsService.deletePost(post.id);
@@ -64,7 +66,7 @@ test("Should not save post when the title has already been taken", async functio
 
 test("Should update post", async function () {
   // given
-  const post = await postsService.savePost({ title: generate(), content: generate() });
+  const post = await postsService.savePost({ title: generate(), slug: generate(), content: generate() });
   post.title = generate();
   post.content = "iupdate";
 
@@ -74,8 +76,9 @@ test("Should update post", async function () {
 
   // then
   expect(response.status).toBe(204);
-  expect(updatedPost.title).toBe(post.title);
   expect(updatedPost.content).toBe(post.content);
+  expect(updatedPost.slug).toBe(post.slug);
+  expect(updatedPost.title).toBe(post.title);
 
   await postsService.deletePost(updatedPost.id);
 });
@@ -93,7 +96,7 @@ test("Should not update post", async function () {
 
 test("Should delete post", async function () {
   // given
-  const post = await postsService.savePost({ title: generate(), content: generate() });
+  const post = await postsService.savePost({ title: generate(), slug: generate(), content: generate() });
 
   // when
   const response = await request(`http://localhost:3000/posts/${post.id}`, "delete");

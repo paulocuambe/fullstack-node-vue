@@ -13,15 +13,25 @@ module.exports = {
     return database.oneOrNone("select * from blog.post where title = $1", title);
   },
 
+  getPostBySlug: function (slug) {
+    return database.oneOrNone("select * from blog.post where slug = $1", slug);
+  },
+
   savePost: function (post) {
-    return database.one("insert into blog.post (title, content) values ($1, $2) returning *", [
+    return database.one("insert into blog.post (title, slug, content) values ($1, $2, $3) returning *", [
       post.title,
+      post.slug,
       post.content,
     ]);
   },
 
   updatePost: function (id, post) {
-    return database.none("update blog.post set title=$1, content=$2 where id = $3", [post.title, post.content, id]);
+    return database.none("update blog.post set title=$1, slug=$2, content=$3 where id = $4", [
+      post.title,
+      post.slug,
+      post.content,
+      id,
+    ]);
   },
 
   deletePost: function (id) {

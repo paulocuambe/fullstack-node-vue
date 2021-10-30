@@ -1,3 +1,4 @@
+const slugify = require("slugify");
 const postsData = require("../data/postsData.js");
 
 module.exports = {
@@ -20,9 +21,12 @@ module.exports = {
 
     if (!post.title || !post.content) throw new Error("Validation errors");
 
-    const existingPost = await postsData.getPostByTitle(post.title);
+    post.slug = slugify(post.title);
 
-    if (existingPost) throw new Error("Post already exists");
+    const postWithTitle = await postsData.getPostByTitle(post.title);
+    const postWithSlug = await postsData.getPostBySlug(post.slug);
+
+    if (postWithTitle || postWithSlug) throw new Error("Post already exists");
 
     return postsData.savePost(post);
   },
