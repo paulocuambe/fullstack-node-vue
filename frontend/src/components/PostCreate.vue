@@ -3,12 +3,21 @@ import { reactive, ref } from "@vue/reactivity";
 defineProps({
   props: ["content", "title"],
 });
-defineEmits(["update:content", "update:title"]);
+
+const emits = defineEmits(["update:content", "update:title"]);
 
 const form = reactive({
   title: "",
   content: "",
 });
+
+const emitTitle = (value) => {
+  emits("update:title", value);
+};
+
+const emitContent = (value) => {
+  emits("update:content", value);
+};
 
 const errorMessage = ref("");
 const successMessage = ref("");
@@ -32,6 +41,9 @@ const addPost = async () => {
 
   if (response.status === 201) {
     successMessage.value = "Projecto adicionado com sucesso.";
+    emits("update:title", "");
+    emits("update:content", "");
+
     form.content = "";
     form.title = "";
   } else {
@@ -47,10 +59,9 @@ const addPost = async () => {
       <div class="text-green-700" v-if="successMessage">{{ successMessage }}</div>
 
       <div class="flex-grow-0">
-        <!-- <label class="label">Title</label> -->
         <input
           class="input"
-          @input="$emit('update:title', $event.target.value)"
+          @input="emitTitle($event.target.value)"
           v-model="form.title"
           type="text"
           placeholder="Choose a title for your article"
@@ -58,10 +69,9 @@ const addPost = async () => {
       </div>
 
       <div class="flex-grow flex flex-col">
-        <!-- <label class="label">Article Body</label> -->
         <textarea
           class="input flex-grow"
-          @input="$emit('update:content', $event.target.value)"
+          @input="emitContent($event.target.value)"
           placeholder="Write something for your audience"
           v-model="form.content"
         ></textarea>
