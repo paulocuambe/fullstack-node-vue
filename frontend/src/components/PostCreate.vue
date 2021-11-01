@@ -1,5 +1,9 @@
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
+defineProps({
+  props: ["content", "title"],
+});
+defineEmits(["update:content", "update:title"]);
 
 const form = reactive({
   title: "",
@@ -43,13 +47,24 @@ const addPost = async () => {
       <div class="text-green-700" v-if="successMessage">{{ successMessage }}</div>
 
       <div class="flex-grow-0">
-        <label class="label">Title</label>
-        <input class="input" v-model="form.title" type="text" placeholder="How to rank 1 in Google" />
+        <!-- <label class="label">Title</label> -->
+        <input
+          class="input"
+          @input="$emit('update:title', $event.target.value)"
+          v-model="form.title"
+          type="text"
+          placeholder="Choose a title for your article"
+        />
       </div>
 
       <div class="flex-grow flex flex-col">
-        <label class="label">Content</label>
-        <textarea class="input flex-grow" placeholder="Escreva o seu blog aqui" v-model="form.content"></textarea>
+        <!-- <label class="label">Article Body</label> -->
+        <textarea
+          class="input flex-grow"
+          @input="$emit('update:content', $event.target.value)"
+          placeholder="Write something for your audience"
+          v-model="form.content"
+        ></textarea>
       </div>
 
       <button type="submit" class="btn flex-grow-0">Adicionar</button>

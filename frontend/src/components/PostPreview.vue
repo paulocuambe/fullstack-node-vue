@@ -1,20 +1,26 @@
 <script setup>
+import { ref, computed } from "@vue/runtime-core";
 import marked from "marked";
-defineProps({
+const props = defineProps({
   title: {
     type: String,
-    default: "Hello Markdown",
+    required: true,
   },
   content: {
     type: String,
-    default: `Hello **everyone**.  ##Hello Paulo. ajsnas asjas.`,
+    required: true,
   },
 });
+
+const previewTitle = computed(() => props.title || "Choose a title for your article");
+const previewContent = computed(() => props.content || "Write something for your audience");
 </script>
 
 <template>
   <section class="h-full overflow-y-auto">
-    <h2 class="font-bold text-4xl mt-4">{{ title }}</h2>
-    <article v-html="marked(content)"></article>
+    <div>
+      <h2 class="font-bold text-4xl">{{ previewTitle }}</h2>
+      <article class="text-2xl mt-4" v-html="marked(previewContent)"></article>
+    </div>
   </section>
 </template>
