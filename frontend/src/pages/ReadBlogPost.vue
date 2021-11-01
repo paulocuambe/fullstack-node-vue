@@ -1,6 +1,7 @@
 <script setup>
 import { onBeforeMount, ref } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
+import marked from "marked";
 
 let post = ref({});
 let isLoading = ref(true);
@@ -32,7 +33,7 @@ const fromatedDate = (date) => {
       <p class="mt-8 text-gray-500">
         Published on <span class="font-bold">{{ fromatedDate(post.date) }}</span>
       </p>
-      <article class="mt-10">{{ post.content }}</article>
+      <article class="mt-10" v-html="marked(post.content)"></article>
     </main>
   </div>
 </template>

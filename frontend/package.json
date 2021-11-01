@@ -7,6 +7,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "marked": "^3.0.8",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12"
   },

@@ -3,9 +3,9 @@ import TheHeader from "./components/TheHeader.vue";
 </script>
 
 <template>
-  <div>
-    <the-header></the-header>
-    <router-view></router-view>
+  <div class="min-h-screen flex flex-col">
+    <the-header class="flex-grow-0"></the-header>
+    <router-view class="flex-auto"></router-view>
   </div>
 </template>
 
